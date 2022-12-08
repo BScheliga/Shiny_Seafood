@@ -12,7 +12,7 @@ df_Seafood <- vroom("Trade_HMRC_clean.csv")
 # https://stackoverflow.com/questions/33180058/coerce-multiple-columns-to-factors-at-once
 df_Seafood[map_lgl(df_Seafood, is.character)] <- lapply(df_Seafood[map_lgl(df_Seafood, is.character)], factor)
 
-# turing Year in to
+# turning Year in to date.year?
 
 # User interface ----
 
@@ -24,10 +24,9 @@ ui <- dashboardPage(
     fluidRow(
       box(plotOutput("plot1", height = 250)),
       
-      box(
-        title = "Controls",
-        sliderInput("slider", "Number of observations:", 1, 100, 50)
-      )
+      #selectInut("SpeciesType",
+                # label = "Which Species type?",
+                # choices = c(levels(df_Seafood$SpeciesType)))
     )
   )
 )
