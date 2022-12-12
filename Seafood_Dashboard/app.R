@@ -24,9 +24,15 @@ ui <- dashboardPage(
     fluidRow(
       box(plotOutput("plot1", height = 250)),
       
+<<<<<<< HEAD
       #selectInut("SpeciesType",
                 # label = "Which Species type?",
                 # choices = c(levels(df_Seafood$SpeciesType)))
+=======
+      selectInut("SpeciesType",
+                 label = "Which Species type?",
+                 choices = c(levels(df_Seafood$SpeciesType)))
+>>>>>>> 73c50d18f9b5ab57a0243e11f5d847980aa484d6
     )
   )
 )
