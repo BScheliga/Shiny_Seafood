@@ -1,0 +1,51 @@
+---
+title: "Test"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+    runtime: shiny
+---
+
+```{r global, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(shiny)
+
+A = c("A1", "A1", "A1", "A2", "A2", "A1", "A2", "A2")
+B = c("B1", "B2", "B1", "B2", "B1", "B2", "B1", "B2")
+x = c(1, 2, 3, 4, 5, 3, 3, 4)
+y = c(5, 4, 3, 2, 1, 5, 3, 4)
+df = data.frame(A, B, x, y, stringsAsFactors = FALSE)
+```
+
+Column 
+-------------------------------
+
+### Select options
+```{r}
+selectInput("selectInput1", "Select A:", 
+            choices = unique(df$A))
+
+selectInput("selectInput2", "Select B:", 
+            choices = unique(df$B))
+```
+
+```{r}
+# Create a subset data frame 
+selectedData = reactive({
+    df[df$A == input@selectInput1 & df$B == input@selectInput2, c(3,4)]
+   })
+```
+
+Column 
+-------------------------------
+
+###Chart
+
+```{r}
+renderPlot({
+    ggplot(selectedData(), aes(x = x, y = y)) +
+        geom_line() + ggtitle(paste0("Selected ", input@selectInput1, " and ", input@selectInput2))
+})

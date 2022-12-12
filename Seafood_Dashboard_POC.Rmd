@@ -4,6 +4,9 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: fill
+    social: menu
+    source_code: embed
+    runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -11,6 +14,8 @@ library(flexdashboard)
 library(lubridate)
 library(vroom)
 library(tidyverse)
+library(shiny)
+library(DT)
 ```
 
 ```{r loading data, include=FALSE}
@@ -30,22 +35,44 @@ df_Seafood$Year <-dmy(as.character(paste("01-01",df_Seafood$Year)))
 ```
 
 
-Row 
+Row {.tabset}
 -----------------------------------------------------------------------
+
+
+### Select input
+
+
+```{r}
+
+# https://stackoverflow.com/questions/45887038/plot-simple-chart-on-the-basis-of-data-subset-in-flexdashboard
+selectInput("selectInput1", "Select Species Type:", 
+            choices = unique(df_Seafood$SpeciesType))
+
+selectInput("selectInput2", "Select Commodity:", 
+            choices = unique(df_Seafood$Commodity))
+
+#input
+
+```
+
+
+
+```{r}
+# Create a subset data frame 
+selectedData = reactive({df_Seafood %>% filter(SpeciesType == as.character(input$selectInput1), Commodity == as.character(input$selectInput2)) 
+  
+   })
+```
+
 
 ### Chart 1 Annual Plot
 
 ```{r}
-ggplot(df_Seafood, aes(Year,Value))+
-      geom_line(aes(colour = SpeciesType))
-
-```
-
-### Legend
-
-```{r Plot legend lives here}
-# legend needs to be
-
+renderPlot({
+  ggplot(selectedData(), aes(Year,Value))+
+      geom_line(aes(colour = Species))
+    
+})
 ```
 
 
@@ -56,11 +83,9 @@ Row
 
 ```{r}
 
+DT::renderDataTable({
+  data <-selectedData()
+  DT::datatable(data)
+  })
+
 ```
-
-### Select input
-
-```{r}
-
-```
-
